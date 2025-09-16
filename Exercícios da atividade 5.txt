@@ -1,0 +1,293 @@
+Atividade 5 - Passagem de Valor Por Referência
+
+
+Exercício 1
+
+#include <iostream>
+using namespace std;
+
+int produto (int a, int b){
+    return a * b;
+}
+
+int main(){
+    int fator1 = 0, fator2 = 0;
+    cin >> fator1 >> fator2;
+    cout << produto (fator1, fator2) << endl;
+    return 0;
+}
+
+
+Exercício 2
+
+#include <iostream>
+using namespace std;
+
+int produto (int *a, int *b){
+    return (*a) * (*b);
+}
+
+int main(){
+    int fator1 = 0, fator2 = 0;
+    cin >> fator1 >> fator2;
+    cout << produto (&fator1, &fator2) << endl;
+    return 0;
+}
+
+
+Exercício 3
+
+#include <iostream>
+using namespace std;
+
+int soma_10 (int numero){
+    return numero + 10;
+}
+
+int main(){
+    int x = 0;
+    cin >> x;
+    cout << soma_10 (x) << endl;
+    return 0;
+}
+
+
+Exercício 4
+
+#include <iostream>
+using namespace std;
+
+int soma_10 (int *numero){
+    return (*numero) + 10;
+}
+
+int main(){
+    int x = 0;
+    cin >> x;
+    cout << soma_10 (&x) << endl;
+    return 0;
+}
+
+
+Exercício 5
+
+#include <iostream>
+using namespace std;
+
+int subtrai_5 (int numero){
+    return numero - 5;
+}
+
+int main(){
+    int x = 0;
+    cin >> x;
+    cout << subtrai_5 (x) << endl;
+    return 0;
+}
+
+
+Exercício 6
+
+#include <iostream>
+using namespace std;
+
+int subtrai_5 (int *numero){
+    return (*numero) - 5;
+}
+
+int main(){
+    int x = 0;
+    cin >> x;
+    cout << subtrai_5 (&x) << endl;
+    return 0;
+}
+
+
+Exercício 7
+
+#include <iostream>
+#define N 3
+using namespace std;
+
+void inversao_vetor (int *vetor){
+    int aux1 = 0, aux2 = N, i = 0;
+    
+    for (i = 0; i < (aux2 - 1); i++){
+        aux1 = vetor [i];
+        vetor [i] = vetor [aux2 - 1];
+        vetor [aux2 - 1] = aux1;        
+        aux1++;
+        aux2--;
+    }
+}
+
+int main(){
+    int i = 0, V [N] = {0};
+    
+    for (i = 0; i < N; i++){
+        cin >> V [i];
+    }
+    
+    inversao_vetor (V);
+    
+    for (i = 0; i < N; i++){
+        cout << V [i] << endl;
+    }    
+    return 0;
+}
+
+
+Comentários extras:
+
+a)Inversão feita na função principal
+
+#include <iostream>
+#define N 3
+using namespace std;
+
+int main(){
+    int i = 0, V [N] = {0}, aux1 = 0, aux2 = N;
+    
+    for (i = 0; i < N; i++){
+        cin >> V [i];
+    }
+
+    for (i = 0; i < (aux2 - 1); i++){
+        aux1 = V [i];
+        V [i] = V [aux2 - 1];
+        V [aux2 - 1] = aux1;
+        aux1++;
+        aux2--;
+    }
+    
+    for (i = 0; i < N; i++){
+        cout << V [i] << endl;
+    }    
+    return 0;
+}
+
+b)Versão com erro de passagem por referência
+
+#include <iostream>
+#define N 3
+using namespace std;
+
+void inversao_vetor (int *vetor){
+    int aux1 = 0, aux2 = N, i = 0;
+    
+    for (i = 0; i < (aux2 - 1); i++){
+        aux1 = vetor [i];
+        vetor [i] = vetor [aux2 - 1];
+        vetor [aux2 - 1] = aux1;        
+        aux1++;
+        aux2--;
+    }
+}
+
+int main(){
+    int i = 0, V [N] = {0};
+    
+    for (i = 0; i < N; i++){
+        cin >> V [i];
+    }
+    
+    inversao_vetor (& V [N]);
+    
+    for (i = 0; i < N; i++){
+        cout << V [i] << endl;
+    }    
+    return 0;
+}
+
+Quando o parâmetro de uma função é um ponteiro de um vetor, não é correto tentar passar o vetor com um operador de endereço. Basta colocar como argumento o nome da variável ("V" nesse caso). Como a cláusula "define" estabelece o tamanho do vetor, não é necessário fornecer seu tamanho como argumento.
+
+Lembre-se que o identificador de um vetor é, na prática, um ponteiro apontado para o primeiro elemento (v[0]).
+
+A chamada acima não passa o vetor "V [N]", mas os endereços das posições de memória alocadas para o ponteiro. Isso implica que a variável "vetor" da função "inversao_vetor" recebe os endereços como argumento e os converte para inteiro (já que endereços de memória estão em hexadecimal). Os processamentos feitos no decorrer do código alteram os endereços de memória, gerando o erro 134, mas não impedindo a impressão dos valores das posições originais.
+
+Exercício 8
+#include <iostream>
+using namespace std;
+
+void letras_maiusculas (string &nome){
+    int i = 0;
+   
+    while (nome [i] != '\0') {
+        if (nome [i] > 96 && nome [i] < 123){
+            nome [i] -= 32;
+        }
+        i++;
+    }
+}
+
+int main(){
+    string nome;
+   
+    getline (cin, nome);
+    letras_maiusculas (nome);
+    cout << nome;
+    return 0;
+}
+
+
+Comentário extra: a razão do operador de endereço "&"
+
+Observe o código abaixo:
+#include <iostream>
+using namespace std;
+
+void letras_maiusculas (string nome){
+    int i = 0;
+    
+    while (nome [i] != '\0') {
+        if (nome [i] > 96 && nome [i] < 123){
+            nome [i] -= 32;
+        }
+    }
+}
+
+int main(){
+    string nome;
+    
+    getline (cin, nome);
+    letras_maiusculas (nome);
+    cout << nome;
+    return 0;
+}
+
+Esse algoritmo não modificará a string inserida, pois toda mudança de valor que ocorra no decorrer da função será perdida após o fim de sua execução. Isso pode ser verificado facilmente pelo uso de uma instrução "cout" no fim da função.
+
+Para a função alterar o conteúdo da string na função principal, é necessário que a função faça uma referência à variável original. Tal medida é obtida com o uso do operador de endereço "&", o qual declara que o parâmetro da função é uma referência ao argumento da chamada (nesse caso é um string que referencia outra).
+
+O parâmetro da função funciona como um apelido (alias) da variável, modificando-a diretamente. Dessa forma, é feita a alteração do valor de uma variável por referência.
+
+Veja abaixo os comentários retirados de uma pesquisa sobre o tema:
+
+Operador de referência (&) em parâmetros de função 
+Declaração de referência:
+Se & é usado na declaração de um parâmetro de função, ele cria uma referência, que é um apelido para a variável original.
+
+Passagem por referência:
+Em C++, uma referência é um meio de fazer a passagem de argumentos "por referência", o que significa que a função não recebe uma cópia da variável, mas sim um apelido direto para ela.
+
+Exemplo de uso como referência:
+C++
+
+#include <iostream>
+
+// Função que recebe uma referência de um inteiro
+void modificarValorReferencia(int& ref) {
+    // Modifica diretamente o valor da variável original
+    ref = 200; 
+}
+
+int main() {
+    int outroNumero = 20;
+    // Chama a função passando a referência (apelido) para 'outroNumero'
+    modificarValorReferencia(outroNumero); 
+    std::cout << "Novo valor de outroNumero: " << outroNumero << std::endl; // Saída: 200
+    return 0;
+}
+
+Neste caso, int& ref declara que ref é uma referência a um inteiro. Quando modificarValorReferencia(outroNumero) é chamada, ref torna-se um apelido para outroNumero, e a modificação ref = 200 altera diretamente outroNumero. 
+
